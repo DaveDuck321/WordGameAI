@@ -152,9 +152,7 @@ export const getCurrentWordClues = (
           }
           break
         case 'absent':
-          for (const invalidLetters of clues.invalidLettersPerTile) {
-            invalidLetters.add(guessChar)
-          }
+          // Ignore for now, absent can only be considered after we know what is actually in the word
           break
       }
     })
@@ -173,6 +171,22 @@ export const getCurrentWordClues = (
         clues.mustIncludeLetterCount.set(char, mustIncludeCount)
       }
     }
+
+    guessStatus.forEach((letterStatus, i) => {
+      const guessChar = guess.charAt(i) as CharValue
+      if (letterStatus === 'absent') {
+        if (!clues.mustIncludeLetterCount.has(guessChar)) {
+          // The letter is definitely not in the word
+          for (const invalidLetters of clues.invalidLettersPerTile) {
+            invalidLetters.add(guessChar)
+          }
+        } else {
+          // The letter is in the word but not duplicated
+          // TODO: this is a weaker than ideal condition
+          clues.invalidLettersPerTile[i].add(guessChar)
+        }
+      }
+    })
   })
 
   return clues

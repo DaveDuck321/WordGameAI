@@ -2,7 +2,9 @@ import { WORDS } from '../constants/wordlist'
 import { VALIDGUESSES } from '../constants/validGuesses'
 import { guessUsesAllClues, getCurrentWordClues } from './statuses'
 
-let remainingWords: string[] = WORDS.map((word) => word.toUpperCase())
+let remainingWords: Set<string> = new Set(
+  WORDS.map((word) => word.toUpperCase())
+)
 
 export const isWordInWordList = (word: string) => {
   return (
@@ -11,18 +13,31 @@ export const isWordInWordList = (word: string) => {
   )
 }
 
-const getLengthOfWordListGivenSolution = (
+const getAnyItemFromSet = (set: Set<string>) => {
+  for (const item of set) {
+    return item
+  }
+  return undefined
+}
+
+const getWordsThatMatchTheGivenSolutionClues = (
   solution: string,
   guesses: string[]
 ) => {
+  const matchingWords = new Set<string>()
   const currentClues = getCurrentWordClues(solution, guesses)
-  let lengthOfWordList = 0
+
   for (const guess of remainingWords) {
     if (guessUsesAllClues(currentClues, guess)) {
-      lengthOfWordList++
+      matchingWords.add(guess)
     }
   }
-  return lengthOfWordList
+
+  // Remove identical matching words
+  for (const word of matchingWords) {
+    remainingWords.delete(word)
+  }
+  return matchingWords
 }
 
 export const updateWordListFromGuess = (
@@ -32,27 +47,22 @@ export const updateWordListFromGuess = (
   const guesses = [...guessList, nextGuess]
 
   const worstCaseSolution = {
-    wordListLength: 0,
-    solutionWord: solution,
+    wordSet: new Set<string>(),
   }
 
-  for (let potentialSolution of remainingWords) {
-    if (nextGuess == potentialSolution) {
-      continue // Avoid automatically giving the word to the user
-    }
+  while (remainingWords.size > 0) {
+    const potentialSolution = getAnyItemFromSet(remainingWords)
 
-    const length = getLengthOfWordListGivenSolution(potentialSolution, guesses)
-    if (length > worstCaseSolution.wordListLength) {
-      worstCaseSolution.wordListLength = length
-      worstCaseSolution.solutionWord = potentialSolution
+    const matchingWords = getWordsThatMatchTheGivenSolutionClues(
+      potentialSolution,
+      guesses
+    )
+    if (matchingWords.size >= worstCaseSolution.wordSet.size) {
+      worstCaseSolution.wordSet = matchingWords
     }
   }
 
-  const newClues = getCurrentWordClues(worstCaseSolution.solutionWord, guesses)
-
-  remainingWords = remainingWords.filter((word) => {
-    return nextGuess !== word && guessUsesAllClues(newClues, word)
-  })
+  remainingWords = worstCaseSolution.wordSet
   console.log(remainingWords)
 
   if (remainingWords.length === 0) {
@@ -61,7 +71,7 @@ export const updateWordListFromGuess = (
     return
   }
 
-  solution = worstCaseSolution.solutionWord
+  solution = getCurrentActiveWord()
 }
 
 export const isWinningWord = (word: string) => {
@@ -69,8 +79,7 @@ export const isWinningWord = (word: string) => {
 }
 
 const getCurrentActiveWord = () => {
-  console.log(remainingWords[0])
-  return remainingWords[0]
+  return getAnyItemFromSet(remainingWords)
 }
 
 export let solution = getCurrentActiveWord()
