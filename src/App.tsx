@@ -25,7 +25,12 @@ import {
   MAX_CHALLENGES,
   ALERT_TIME_MS,
 } from './constants/settings'
-import { isWordInWordList, isWinningWord, solution } from './lib/words'
+import {
+  isWordInWordList,
+  isWinningWord,
+  solution,
+  updateWordListFromGuess,
+} from './lib/words'
 import { addStatsForCompletedGame, loadStats } from './lib/stats'
 import {
   loadGameStateFromLocalStorage,
@@ -138,6 +143,7 @@ function App() {
       }, ALERT_TIME_MS)
     }
 
+    updateWordListFromGuess(guesses, currentGuess)
     const winningWord = isWinningWord(currentGuess)
 
     if (
