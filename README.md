@@ -1,5 +1,9 @@
 # Title omitted, removed due to NYTimes
 
+POV: you're actually really unlucky.
+
+This was forked from React\*e
+
 ## Build and run
 
 ### To Run Locally:
@@ -20,7 +24,7 @@ $> docker run -d -p 3000:3000 game
 
 Open [http://localhost:3000](http://localhost:3000) in browser.
 
-*** Omitted, removed due to NYTimes***
+**_ Omitted, removed due to NYTimes_**
 
 ## FAQ
 
