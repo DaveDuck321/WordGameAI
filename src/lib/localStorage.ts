@@ -1,3 +1,5 @@
+import { ENABLE_SAVE_GAME_PROGRESS } from '../constants/settings'
+
 const gameStateKey = 'gameState'
 
 type StoredGameState = {
@@ -6,10 +8,12 @@ type StoredGameState = {
 }
 
 export const saveGameStateToLocalStorage = (gameState: StoredGameState) => {
+  if (!ENABLE_SAVE_GAME_PROGRESS) return
   localStorage.setItem(gameStateKey, JSON.stringify(gameState))
 }
 
 export const loadGameStateFromLocalStorage = () => {
+  if (!ENABLE_SAVE_GAME_PROGRESS) return
   const state = localStorage.getItem(gameStateKey)
   return state ? (JSON.parse(state) as StoredGameState) : null
 }
