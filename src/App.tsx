@@ -62,7 +62,7 @@ function App() {
   const [successAlert, setSuccessAlert] = useState('')
   const [guesses, setGuesses] = useState<string[]>(() => {
     const loaded = loadGameStateFromLocalStorage()
-    if (loaded?.solution !== solution) {
+    if (!loaded || loaded?.solution !== solution) {
       return []
     }
     const gameWasWon = loaded.guesses.includes(solution)

@@ -13,7 +13,7 @@ export const saveGameStateToLocalStorage = (gameState: StoredGameState) => {
 }
 
 export const loadGameStateFromLocalStorage = () => {
-  if (!ENABLE_SAVE_GAME_PROGRESS) return
+  if (!ENABLE_SAVE_GAME_PROGRESS) return null
   const state = localStorage.getItem(gameStateKey)
   return state ? (JSON.parse(state) as StoredGameState) : null
 }
