@@ -1,4 +1,5 @@
 import { getGuessStatuses } from '../../lib/statuses'
+import { solution } from '../../lib/words'
 import { Cell } from './Cell'
 
 type Props = {
@@ -6,7 +7,7 @@ type Props = {
 }
 
 export const CompletedRow = ({ guess }: Props) => {
-  const statuses = getGuessStatuses(guess)
+  const statuses = getGuessStatuses(solution, guess)
 
   return (
     <div className="flex justify-center mb-1">
