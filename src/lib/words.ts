@@ -47,8 +47,11 @@ export const updateWordListFromGuess = (
   const guesses = [...guessList, nextGuess]
 
   const worstCaseSolution = {
-    wordSet: new Set<string>(),
+    wordSet: remainingWords.has(nextGuess)
+      ? getWordsThatMatchTheGivenSolutionClues(nextGuess, guesses)
+      : new Set<string>(),
   }
+  remainingWords.delete(nextGuess)
 
   while (remainingWords.size > 0) {
     const potentialSolution = getAnyItemFromSet(remainingWords)
@@ -64,12 +67,6 @@ export const updateWordListFromGuess = (
 
   remainingWords = worstCaseSolution.wordSet
   console.log(remainingWords)
-
-  if (remainingWords.length === 0) {
-    // User managed to win?
-    solution = nextGuess
-    return
-  }
 
   solution = getCurrentActiveWord()
 }
