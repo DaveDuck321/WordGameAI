@@ -1,46 +1,47 @@
-# Getting Started with Create React App
+# Title omitted, removed due to NYTimes
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+## Build and run
 
-## Available Scripts
+### To Run Locally:
 
-In the project directory, you can run:
+Clone the repository and perform the following command line actions:
 
-### `npm start`
+```bash
+$> npm install
+$> npm run start
+```
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
+### To build/run docker container:
 
-The page will reload if you make edits.\
-You will also see any lint errors in the console.
+```bash
+$> docker build -t game .
+$> docker run -d -p 3000:3000 game
+```
 
-### `npm test`
+Open [http://localhost:3000](http://localhost:3000) in browser.
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+*** Omitted, removed due to NYTimes***
 
-### `npm run build`
+## FAQ
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+### How can I change the length of a guess?
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+- Update the `MAX_WORD_LENGTH` variable in [src/constants/settings.ts](src/constants/settings.ts) to the desired length.
+- Update the `WORDS` array in [src/constants/wordlist.ts](src/constants/wordlist.ts) to only include words of the new length.
+- Update the `VALIDGUESSES` array in [src/constants/validGuesses.ts](src/constants/validGuesses.ts) arrays to only include words of the new length.
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+### How can I create a version in another language?
 
-### `npm run eject`
-
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
-
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
-
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
-
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
-
-## Learn More
-
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
-
-To learn React, check out the [React documentation](https://reactjs.org/).
+- In [public/index.html](public/index.html):
+  - Update the title, the description, and the "You need to enable JavaScript" message
+  - Update the language attribute in the HTML tag
+  - If the language is written right-to-left, add `dir="rtl"` to the HTML tag
+- Update the name and short name in [public/manifest.json](public/manifest.json)
+- Update the strings in [src/constants/strings.ts](src/constants/strings.ts)
+- Add all of the five letter words in the language to [src/constants/validGuesses.ts](src/constants/validGuesses.ts), replacing the English words
+- Add a list of goal words in the language to [src/constants/wordlist.ts](src/constants/wordlist.ts), replacing the English words
+- Update the "About" modal in [src/components/modals/AboutModel.tsx](src/components/modals/AboutModel.tsx)
+- Update the "Info" modal in [src/components/modals/InfoModal.tsx](src/components/modals/InfoModal.tsx)
+- If the language has letters that are not present in English, add them to the `CharValue` type in [src/lib/statuses.ts](src/lib/statuses.ts) and update the keyboard in [src/components/keyboard/Keyboard.tsx](src/components/keyboard/Keyboard.tsx)
+- If the language's letters are made of multiple unicode characters, use a grapheme splitter at various points throughout the app or normalize the input so that all of the letters are made of a single character
+- If the language is written right-to-left, prepend `\u202E` (the unicode right-to-left override character) to the return statement of the inner function in `generateEmojiGrid` in [src/lib/share.ts](src/lib/share.ts)
